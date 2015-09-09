@@ -1,0 +1,108 @@
+
+public class Alphanum {
+
+	
+	public static void main(String[] args) {
+		long Start = System.currentTimeMillis();
+		long count=0l;
+		String AlphaNumeric= "";
+		AlphaNumeric=getNextAlphanumb("@00000000");
+		do{
+		AlphaNumeric=getNextAlphanumb(AlphaNumeric);
+		System.out.println(AlphaNumeric);
+		count++;
+		}while(!AlphaNumeric.equals("ZZZZZZZZZ"));
+		System.out.println("AlphaNumeric is "+AlphaNumeric);
+		System.out.println("Count is  "+count);
+		System.out.println("Time Taken for execution = "+(System.currentTimeMillis()-Start)+" milliseconds");
+	}
+	
+	public static String getNextAlphanumb(String val){
+		
+		
+		String alpha_val="",alpha_MAX="",AlphaNumeric="";
+		int alphaCount=0,num_MAX=0,num_val=0,numberCount=0;
+		if(val.equals("@00000000"))
+			return "A00000000";
+		for(int i=0;i<val.length();i++){
+			
+			int alpha = val.charAt(i);
+			if(alpha>=65 && alpha<=90)
+				alphaCount++;
+			
+		}
+		alpha_val =val.substring(0, alphaCount);
+		alpha_MAX=populate(alphaCount,"Z");
+		if(alphaCount != 9){
+			num_val =Integer.valueOf(val.substring(alphaCount, val.length())).intValue();
+			num_MAX=Integer.valueOf(populate(9-alphaCount,"9")).intValue();
+			numberCount=String.valueOf(num_val).length();
+		}else{
+			if(alpha_val.equals("ZZZZZZZZZ"))
+				return AlphaNumeric="000000000";
+			StringBuffer alphan= new StringBuffer(val);
+			alphan= incAlpha(alphan,alphaCount);
+			AlphaNumeric = alphan.toString();
+			return AlphaNumeric;
+		}
+		
+		if(alpha_val.equals(alpha_MAX)&&(num_val==num_MAX)){
+
+			StringBuffer alphan= new StringBuffer(alpha_val);
+			alphan= incAlpha(alphan,alphaCount).append('A');
+			String popZero=populate(numberCount-1,"0");
+			AlphaNumeric = alphan.toString()+popZero;
+			
+		}else if((num_val==num_MAX)){
+			
+			StringBuffer alphan= new StringBuffer(alpha_val);
+			alphan= incAlpha(alphan,alphaCount);
+			String popZero=populate(numberCount,"0");
+			AlphaNumeric = alphan.toString()+popZero;
+			
+			
+			
+		}else{
+			num_val++;
+			numberCount=String.valueOf(num_val).length();
+			AlphaNumeric=String.valueOf(num_val);
+			int len= AlphaNumeric.length();
+			if(len<(9-alphaCount))
+				for(int i=0;i<(9-alphaCount-numberCount);i++)
+					AlphaNumeric = "0"+AlphaNumeric;
+			
+			AlphaNumeric=alpha_val+AlphaNumeric;
+		}
+		return AlphaNumeric;
+	}
+	
+	public static StringBuffer incAlpha(StringBuffer val, int alphaCount){
+		int rec_count=alphaCount-1;
+		if(rec_count!=-1){
+			int alpha  = val.charAt(rec_count);
+			if(val.charAt(rec_count)=='Z'){
+				val.setCharAt(rec_count, 'A');
+				incAlpha(val, rec_count);
+			}
+			else{
+				alpha++;
+				char t= (char) alpha;
+				val.setCharAt(rec_count, t);
+			}
+		}
+		return val;
+	}
+	
+	public static String populate(int range,String valtoPopulate){
+		String temp="";
+		for(int i=0;i<(range);i++){
+				temp = valtoPopulate+temp;
+			}
+		return temp;
+		
+		
+	}
+	
+
+
+}
